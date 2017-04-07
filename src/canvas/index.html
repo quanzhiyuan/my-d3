@@ -42,6 +42,9 @@
 <script>
 
     /**
+     *id:canvas 的id
+     *startAngle 初始角度
+     * endAngle 结束角度
      *
      */
         function kdcharts(param) {
@@ -53,20 +56,17 @@
             posY = can.height / 2,
             fps = 1000 / 200,
             procent = 0,
-            oneProcent = 360 / 100,
+            oneProcent =( param.endAngle-param.startAngle) / 100,
             result = oneProcent * 64;
-        ctx.lineCap = 'round';
-        (function (){
+            ctx.lineCap = 'round';
             var deegres = 0;
             var acrInterval = setInterval (function() {
                 deegres += 1;
                 ctx.clearRect( 0, 0, can.width, can.height );
                 procent = deegres / oneProcent;
-
                 spanProcent.innerHTML = procent.toFixed();
-
                 ctx.beginPath();
-                ctx.arc( posX, posY, 70, (Math.PI/180) * 270, (Math.PI/180) * (270 + 360) );
+                ctx.arc( posX, posY, 70, (Math.PI/180) * param.startAngle, (Math.PI/180) * (param.startAngle + param.endAngle) );
                 ctx.strokeStyle = '#b1b1b1';
                 ctx.lineWidth = '10';
                 ctx.stroke();
@@ -74,12 +74,14 @@
                 ctx.beginPath();
                 ctx.strokeStyle = '#3949AB';
                 ctx.lineWidth = '10';
-                ctx.arc( posX, posY, 70, (Math.PI/180) * 270, (Math.PI/180) * (270 + deegres) );
+                ctx.arc( posX, posY, 70, (Math.PI/180) * param.startAngle, (Math.PI/180) * (param.startAngle + deegres) );
                 ctx.stroke();
                 if( deegres >= result ) clearInterval(acrInterval);
             }, fps);
-        }())
     }
-        kdcharts();
+        kdcharts({
+            startAngle:0,
+            endAngle:180
+        });
 </script>
 </html>
