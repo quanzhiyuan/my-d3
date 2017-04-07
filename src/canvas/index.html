@@ -41,10 +41,13 @@
 </body>
 <script>
 
-    window.onload = function() {
+    /**
+     *
+     */
+        function kdcharts(param) {
         var can = document.getElementById('canvas'),
             spanProcent = document.getElementById('procent'),
-            c = can.getContext('2d');
+            ctx= can.getContext('2d');
 
         var posX = can.width / 2,
             posY = can.height / 2,
@@ -52,36 +55,31 @@
             procent = 0,
             oneProcent = 360 / 100,
             result = oneProcent * 64;
-
-        c.lineCap = 'round';
-        arcMove();
-
-        function arcMove(){
+        ctx.lineCap = 'round';
+        (function (){
             var deegres = 0;
             var acrInterval = setInterval (function() {
                 deegres += 1;
-                c.clearRect( 0, 0, can.width, can.height );
+                ctx.clearRect( 0, 0, can.width, can.height );
                 procent = deegres / oneProcent;
 
                 spanProcent.innerHTML = procent.toFixed();
 
-                c.beginPath();
-                c.arc( posX, posY, 70, (Math.PI/180) * 270, (Math.PI/180) * (270 + 360) );
-                c.strokeStyle = '#b1b1b1';
-                c.lineWidth = '10';
-                c.stroke();
+                ctx.beginPath();
+                ctx.arc( posX, posY, 70, (Math.PI/180) * 270, (Math.PI/180) * (270 + 360) );
+                ctx.strokeStyle = '#b1b1b1';
+                ctx.lineWidth = '10';
+                ctx.stroke();
 
-                c.beginPath();
-                c.strokeStyle = '#3949AB';
-                c.lineWidth = '10';
-                c.arc( posX, posY, 70, (Math.PI/180) * 270, (Math.PI/180) * (270 + deegres) );
-                c.stroke();
+                ctx.beginPath();
+                ctx.strokeStyle = '#3949AB';
+                ctx.lineWidth = '10';
+                ctx.arc( posX, posY, 70, (Math.PI/180) * 270, (Math.PI/180) * (270 + deegres) );
+                ctx.stroke();
                 if( deegres >= result ) clearInterval(acrInterval);
             }, fps);
-
-        }
-
-
+        }())
     }
+        kdcharts();
 </script>
 </html>
