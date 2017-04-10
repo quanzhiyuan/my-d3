@@ -12,76 +12,72 @@
         background: #fff;
     }
 
-    span#procent {
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        font-size: 50px;
-        transform: translate(-50%, -50%);
-        color: #3949AB;
-    }
 
-    span#procent::after {
-        content: '%';
-    }
-
-    .canvas-wrap {
-        position: relative;
-        width: 300px;
-        height: 300px;
-    }
+    /*.canvas-wrap {*/
+        /*position: relative;*/
+        /*width: 300px;*/
+        /*height: 300px;*/
+    /*}*/
 </style>
 <body>
-<div class="canvas-wrap">
     <canvas id="canvas" width="300" height="300"></canvas>
-    <span id="procent"></span>
-</div>
 
 </body>
+<!--<script src="../tools/Scripts/hidpi-canvas.min.js"></script>-->
 <script>
 
     /**
-     *id:canvas 的id
-     *startAngle 初始角度
+     * id:canvas 的id
+     * startAngle 初始角度
      * endAngle 结束角度
      *
+     * percent:进度百分比
+     * color:颜色
+     * ifbackgroud_circle :是否需要底环
+     * background_color:底环颜色
      */
         function kdcharts(param) {
-        var can = document.getElementById('canvas'),
-            spanProcent = document.getElementById('procent'),
+        var can = document.getElementById(param.id),
             ctx= can.getContext('2d');
-
         var posX = can.width / 2,
             posY = can.height / 2,
             fps = 1000 / 200,
-            procent = 0,
             oneProcent =( param.endAngle-param.startAngle) / 100,
-            result = oneProcent * 64;
+            result = oneProcent * param.percent;
             ctx.lineCap = 'round';
             var deegres = 0;
             var acrInterval = setInterval (function() {
                 deegres += 1;
                 ctx.clearRect( 0, 0, can.width, can.height );
-                procent = deegres / oneProcent;
-                spanProcent.innerHTML = procent.toFixed();
+                if(param.ifbackground_circle){
+                    ctx.beginPath();
+                    ctx.arc( posX, posY, param.radius, (Math.PI/180) * (param.startAngle)%360, (Math.PI/180) * (param.endAngle)%360 );
+                    if(param.background_color){
+                        ctx.strokeStyle = param.background_color;
+                    }else{
+                        ctx.strokeStyle = '#b1b1b1';
+                    }
+                    ctx.lineWidth = param.lineWidth;
+                    ctx.stroke();
+                }
                 ctx.beginPath();
-                ctx.arc( posX, posY, 70, (Math.PI/180) * param.startAngle, (Math.PI/180) * (param.startAngle + param.endAngle) );
-                ctx.strokeStyle = '#b1b1b1';
-                ctx.lineWidth = '10';
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.strokeStyle = '#3949AB';
-                ctx.lineWidth = '10';
-                ctx.arc( posX, posY, 70, (Math.PI/180) * param.startAngle, (Math.PI/180) * (param.startAngle + deegres) );
+                ctx.strokeStyle =param.color;
+                ctx.lineWidth = param.lineWidth;
+                ctx.arc( posX, posY, param.radius, (Math.PI/180) * (param.startAngle)%360, (Math.PI/180) * (param.startAngle + deegres)%360 );
                 ctx.stroke();
                 if( deegres >= result ) clearInterval(acrInterval);
             }, fps);
     }
         kdcharts({
+            id:'canvas',
             startAngle:0,
-            endAngle:180
+            endAngle:360,
+            percent:70,
+            radius:70,
+            color:'#44acf4',
+            lineWidth:'10',
+            ifbackground_circle:true,
+            background_color: '#ebebeb'
         });
 </script>
 </html>
